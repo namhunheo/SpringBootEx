@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:text="${#numbers.formatInteger(price,0)}"></div>
+    <ul>
+        <li th:each="dto : ${list}" >
+            <a th:href="@{/sample/exView}">[[${dto}]]</a>
+        </li>
+    </ul>
+</body>
+</html>

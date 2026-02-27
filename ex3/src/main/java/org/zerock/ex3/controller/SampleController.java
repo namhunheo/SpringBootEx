@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.ex3.dto.SampleDTO;
 
@@ -17,14 +16,15 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/sample")
 @Log4j2
-public class SampleControler {
+public class SampleController {
     @GetMapping("/ex1")
-    public void ex1(Model model){
-        log.info("ex1..........");
+    public void ex1(Model model) {
+        model.addAttribute("name", "홍길동");
+        log.info("ex1.....................");
     }
 
-    @GetMapping("/ex2")
-    public void exModel(Model model){
+    @GetMapping({"/ex2", "/exLink"})
+    public String ex2(Model model) {
         List<SampleDTO> list = IntStream.rangeClosed(1,20).asLongStream().mapToObj(i-> {
             SampleDTO dto = SampleDTO.builder()
                     .sno(i)
@@ -35,11 +35,11 @@ public class SampleControler {
             return dto;
         }).collect(Collectors.toList());
         model.addAttribute("list", list);
+        return "sample/ex2";
     }
 
-    @GetMapping({"/exInline"})
+    @GetMapping("/exInline")
     public String exInline(RedirectAttributes redirectAttributes) {
-        log.info("exInline..............");
         SampleDTO dto = SampleDTO.builder()
                 .sno(100L)
                 .first("First..100")
@@ -48,13 +48,19 @@ public class SampleControler {
                 .build();
         redirectAttributes.addFlashAttribute("result", "success");
         redirectAttributes.addFlashAttribute("dto", dto);
-
+        redirectAttributes.addFlashAttribute("name", "<i>홍길동</i>");
         return "redirect:/sample/ex3";
     }
 
     @GetMapping("/ex3")
-    public void ex3(){
-        log.info("ex3");
+    public void ex3(Model model) {
+        log.info("ex3.....................");
     }
 
+    @GetMapping({"/exLayout1", "exLayout2"})
+    public void exLayout1(){
+        log.info("exLayout............");
+    }
 }
+
+
